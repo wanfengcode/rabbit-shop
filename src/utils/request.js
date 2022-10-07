@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import router from '@/router'
 import store from '@/store'
@@ -12,6 +11,7 @@ const instance = axios.create({
 // 请求拦截
 instance.interceptors.request.use(config => {
   const { userMessage } = store.state.user
+  console.log(userMessage.token)
   // 判断用户是否存在token值，存储在则在请求头位置携带其token值，不存在则报错
   if (userMessage.token) {
     config.header.Authorization = `Bearer ${userMessage.token}`
