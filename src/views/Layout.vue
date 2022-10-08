@@ -17,6 +17,7 @@
 import NavBar from '@/components/NavBar.vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import { useStore } from 'vuex'
 export default {
   name: 'Layout',
   components: {
@@ -25,7 +26,8 @@ export default {
     Footer
   },
   setup () {
-
+    const store = useStore()
+    store.dispatch('category/getList')
   }
 }
 </script>

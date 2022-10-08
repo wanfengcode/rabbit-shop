@@ -1,33 +1,49 @@
 <template>
   <ul class="navs">
     <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li>
-      <a href="#">美食</a>
-      <div class="layer">
+    <li
+      v-for="item in list"
+      :key="item.id"
+      @mouseenter="show(item)"
+      @mouseleave="hide(item)"
+    >
+      <router-link :to="`/category/${item.id}`" @click="hide(item)">{{
+        item.name
+      }}</router-link>
+      <div class="layer" :class="{ open: item.open }">
         <ul>
-          <li v-for="i in 10" :key="i">
-            <a href="#">
-              <img src="../assets/images/uploads/fresh_goods_1.jpg" alt="" />
-              <p>果干</p>
-            </a>
+          <li v-for="sub in item.children" :key="sub.id">
+            <router-link :to="`/category/sub/${sub.id}`" @click="hide(item)">
+              <img :src="sub.picture" alt="" />
+              <p>{{ sub.name }}</p>
+            </router-link>
           </li>
         </ul>
       </div>
     </li>
-    <li><a href="#">餐厨</a></li>
-    <li><a href="#">艺术</a></li>
-    <li><a href="#">电器</a></li>
-    <li><a href="#">居家</a></li>
-    <li><a href="#">洗护</a></li>
-    <li><a href="#">孕婴</a></li>
-    <li><a href="#">服装</a></li>
-    <li><a href="#">杂货</a></li>
   </ul>
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 export default {
-  name: 'HeaderNav'
+  name: 'HeaderNav',
+  setup () {
+    const store = useStore()
+    const list = computed(() => {
+      return store.state.category.list
+    })
+
+    const show = (item) => {
+      store.commit('category/show', item)
+    }
+    const hide = (item) => {
+      store.commit('category/hide', item)
+    }
+
+    return { list, show, hide }
+  }
 }
 </script>
 
@@ -53,13 +69,17 @@ export default {
         color: @xtxColor;
         border-bottom: 1px solid @xtxColor;
       }
-      > .layer {
-        height: 132px;
-        opacity: 1;
-      }
+      //   > .layer {
+      //     height: 132px;
+      //     opacity: 1;
+      //   }
     }
   }
   .layer {
+    &.open {
+      height: 132px;
+      opacity: 1;
+    }
     width: 1240px;
     background-color: #fff;
     position: absolute;
