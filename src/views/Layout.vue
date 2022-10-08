@@ -1,24 +1,37 @@
 <template>
-   <div>
+   <div class="container">
      <!-- 顶部通栏 -->
-   <nav>顶部通栏</nav>
+   <NavBar></NavBar>
    <!-- 头部组件 -->
-   <header>头部组件</header>
+   <Header></Header>
    <!-- main内容容器 -->
    <div class="main">
    <router-view></router-view>
    </div>
    <!-- 底部组件 -->
-   <footer>底部组件</footer>
+   <Footer>底部组件</Footer>
    </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 export default {
-  name: 'Layout'
+  name: 'Layout',
+  components: {
+    NavBar,
+    Header,
+    Footer
+  },
+  setup () {
+
+  }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.main{
+  min-height: 600px;
+}
 </style>

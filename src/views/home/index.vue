@@ -1,5 +1,5 @@
 <template>
-  <div>HomePage</div>
+    <div class="container">HomePage</div>
 </template>
 
 <script>
@@ -8,6 +8,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
 
 </style>
