@@ -4,6 +4,8 @@
    <NavBar></NavBar>
    <!-- 头部组件 -->
    <Header></Header>
+   <!-- 吸顶头部组件 -->
+   <HeaderSticky></HeaderSticky>
    <!-- main内容容器 -->
    <div class="main">
    <router-view></router-view>
@@ -17,13 +19,15 @@
 import NavBar from '@/components/NavBar.vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import HeaderSticky from '@/components/HeaderSticky.vue'
 import { useStore } from 'vuex'
 export default {
   name: 'Layout',
   components: {
     NavBar,
     Header,
-    Footer
+    Footer,
+    HeaderSticky
   },
   setup () {
     const store = useStore()
