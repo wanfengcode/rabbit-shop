@@ -29,6 +29,7 @@ export default {
 <style lang="less" scoped>
 .header {
   background: #fff;
+  z-index: 100;
   .container {
     display: flex;
     align-items: center;

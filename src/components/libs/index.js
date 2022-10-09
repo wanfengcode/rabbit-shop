@@ -8,9 +8,11 @@
     使用时，在main.js中导入，通过use方法将插件进行注册
 */
 import RabbitCarousel from './RabbitCarousel.vue'
+import RabbitMore from './RabbitMore.vue'
 
 export default {
   install (app) {
     app.component(RabbitCarousel.name, RabbitCarousel)
+    app.component(RabbitMore.name, RabbitMore)
   }
 }

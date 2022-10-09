@@ -1,5 +1,4 @@
 <template>
-   <div class="container">
      <!-- 顶部通栏 -->
    <NavBar></NavBar>
    <!-- 头部组件 -->
@@ -12,7 +11,6 @@
    </div>
    <!-- 底部组件 -->
    <Footer>底部组件</Footer>
-   </div>
 </template>
 
 <script>

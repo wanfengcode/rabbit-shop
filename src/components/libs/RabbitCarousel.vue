@@ -54,8 +54,7 @@ export default {
 
     // 自动播放轮播图
     let timer = null
-    const autoplayFn = () => {
-      // 每次调用前先清除之前的定时器
+    const autoPlayFn = () => {
       clearInterval(timer)
       timer = setInterval(() => {
         index.value++
@@ -64,14 +63,13 @@ export default {
         }
       }, props.duration)
     }
-    // 通过监听list数据是否存在且autoplay值来判断是否开启自动播放
-    watch(() => props.list, (newVal) => {
-      if (newVal.length && props.autoPlay) {
-        index.value = 0
-        autoplayFn()
+    //  监听props的list属性也就是监听存放轮播图信息的数组以及props的autoPlay决定是否开启自动轮播
+    watch(() => props.list, (newValue) => {
+      if (newValue.length && props.autoPlay) {
+        autoPlayFn()
       }
-    }, { immediate: true })
-    // 鼠标进入时暂停，离开时开启
+    })
+    // 鼠标进入轮播图区域暂停自动播放，离开时开启
     const pause = () => {
       if (timer) {
         clearInterval(timer)
@@ -79,9 +77,11 @@ export default {
     }
     const start = () => {
       if (props.list.length && props.autoPlay) {
-        autoplayFn()
+        autoPlayFn()
       }
     }
+
+    // 页面销毁时，注销定时器
     onUnmounted(() => {
       clearInterval(timer)
     })

@@ -70,7 +70,7 @@ export default {
 <style lang="less" scoped>
 .homeCategory {
   width: 250px;
-  height: 450px;
+  height: 500px;
   background: rgba(0, 0, 0, 0.8);
   position: relative;
   z-index: 99;
