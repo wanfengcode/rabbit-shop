@@ -21,3 +21,7 @@ export const findBrand = () => {
 export const findProduct = () => {
   return request('/home/goods', 'get')
 }
+// 获取最新专题
+export const findSpecial = () => {
+  return request('/home/special', 'get')
+}

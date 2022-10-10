@@ -24,8 +24,8 @@ export default {
   name: 'HomeGoods',
   props: {
     goods: {
-      type: Object,
-      default: () => ({})
+      type: Array,
+      default: () => ([])
     }
   }
 }
