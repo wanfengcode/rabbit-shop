@@ -17,3 +17,7 @@ export const findPopular = () => {
 export const findBrand = () => {
   return request('/home/brand', 'get')
 }
+// 获取产品
+export const findProduct = () => {
+  return request('/home/goods', 'get')
+}

@@ -34,8 +34,10 @@ export default {
     const brandList = useLazyData(target, findBrand)
     const index = ref(0)
 
+    // 品牌图片共十张等分为两版,因此index的值只存在0 1
     const togo = (step) => {
       const tempIndex = index.value + step
+      //   当tempIndex值小于0或大于1对index均不做处理,并返回不再执行后续代码
       if (tempIndex < 0 || tempIndex > 1) {
         return
       }

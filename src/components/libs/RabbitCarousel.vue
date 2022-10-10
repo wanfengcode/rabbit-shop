@@ -1,7 +1,7 @@
 <template>
   <div class='rabbitCarousel' @mouseenter="pause()" @mouseleave="start()" >
     <ul class="carousel-body">
-      <li class="carousel-item" v-for="(item,i) in list" :key="i" :class="{ fade: index === i }" >
+      <li class="carousel-item" v-for="(item,i) in list" :key="i" :class="{ fade: index===i }" >
         <RouterLink :to="item.hrefUrl">
           <img :src="item.imgUrl" alt="">
         </RouterLink>
