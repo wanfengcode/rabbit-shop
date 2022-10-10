@@ -1,22 +1,39 @@
 <template>
   <div class='rabbitBread'>
-    <div class="xtx-bread-item">
+    <div class="rabbitBread-item">
       <RouterLink to="/">首页</RouterLink>
     </div>
     <i class="iconfont icon-angle-right"></i>
-    <div class="xtx-bread-item">
-      <RouterLink to="/category/10000">电器</RouterLink>
+
+    <!-- 一级类目 -->
+    <div class="rabbitBread-item" v-if="topCategory" >
+      <RouterLink v-if="topCategoryPath" :to="topCategoryPath">{{topCategory}}</RouterLink>
+      <span v-else>{{topCategory}}</span>
     </div>
-    <i class="iconfont icon-angle-right"></i>
-    <div class="xtx-bread-item">
-      <span>空调</span>
+    <i class="iconfont icon-angle-right" v-if="topCategory" ></i>
+
+    <!-- 二级类目或更多层,通过提供插槽位置由父组件自行决定 -->
+    <div class="rabbitBread-item">
+      <span><slot></slot></span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RabbitBread'
+  name: 'RabbitBread',
+  props: {
+    // 用于接收父组件传递的一级类目名称
+    topCategory: {
+      type: String,
+      default: ''
+    },
+    // 用于接收父组件传递的一级类目地址
+    topCategoryPath: {
+      type: [String, Object],
+      default: '/'
+    }
+  }
 }
 </script>
 
