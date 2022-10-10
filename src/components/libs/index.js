@@ -9,6 +9,7 @@
 */
 import RabbitCarousel from './RabbitCarousel.vue'
 import RabbitMore from './RabbitMore.vue'
+import RabbitBread from './RabbitBread.vue'
 import defaultImg from '@/assets/images/200.png'
 
 const defineDirective = (app) => {
@@ -36,6 +37,7 @@ export default {
     // 将封装的插件注册到整个项目的根实例中,即全局注册
     app.component(RabbitCarousel.name, RabbitCarousel)
     app.component(RabbitMore.name, RabbitMore)
+    app.component(RabbitBread.name, RabbitBread)
 
     // 将自定义的指令注册到根实例中
     defineDirective(app)
