@@ -11,7 +11,7 @@
       <!-- 产品区域的主体,也就是面板的默认插槽 -->
       <div class="box">
          <RouterLink class="cover" :to="`/category/${item.id}`">
-          <img :src="item.picture" alt="">
+          <img v-lazyload="item.picture" alt="">
           <strong class="label">
             <span>{{item.name}}馆</span>
             <span>{{item.saleInfo}}</span>

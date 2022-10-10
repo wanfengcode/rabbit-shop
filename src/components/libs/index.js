@@ -9,10 +9,35 @@
 */
 import RabbitCarousel from './RabbitCarousel.vue'
 import RabbitMore from './RabbitMore.vue'
+import defaultImg from '@/assets/images/200.png'
+
+const defineDirective = (app) => {
+  // 图片懒加载指令
+  app.directive('lazyload', {
+    mounted (el, binding) {
+      const observer = new IntersectionObserver(([{ isIntersecting }]) => {
+        if (isIntersecting) {
+          observer.unobserve(el)
+          el.onerror = () => {
+            el.src = defaultImg
+          }
+          el.src = binding.value
+        }
+      }, {
+        threshold: 0.01
+      })
+      observer.observe(el)
+    }
+  })
+}
 
 export default {
   install (app) {
+    // 将封装的插件注册到整个项目的根实例中,即全局注册
     app.component(RabbitCarousel.name, RabbitCarousel)
     app.component(RabbitMore.name, RabbitMore)
+
+    // 将自定义的指令注册到根实例中
+    defineDirective(app)
   }
 }
