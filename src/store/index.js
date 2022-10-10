@@ -19,7 +19,7 @@ export default createStore({
   // 请求数据，实际开发中将mutation提交的数据变动执行此时数据为改变后的值(dispatch)
   actions: {
   },
-  // 分模块
+  // 分模块，注册模块
   modules: {
     user,
     cart,

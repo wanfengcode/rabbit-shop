@@ -5,6 +5,7 @@ const routes = [
   // 一级路由
   {
     path: '/',
+    // 路由懒加载
     component: () => import('@/views/Layout'),
     // 二级路由
     children: [

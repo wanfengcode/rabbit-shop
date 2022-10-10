@@ -9,3 +9,11 @@ export const findBanner = () => {
 export const findNew = () => {
   return request('/home/new', 'get')
 }
+// 获取人气推荐
+export const findPopular = () => {
+  return request('/home/hot', 'get')
+}
+// 获取热门品牌
+export const findBrand = () => {
+  return request('/home/brand', 'get')
+}

@@ -1,14 +1,13 @@
 <template>
-<div class="home-new">
-    <HomePanel title="新鲜好物" sub-title="新鲜出炉 品质靠谱">
-      <template #right><RabbitMore path="/" /></template>
-      <!-- 面板内容 -->
+  <div class="home-popular">
+    <HomePanel title="人气推荐" subTitle="人气爆款 不容错过">
+      <template #right><RabbitMore></RabbitMore></template>
       <ul class="goods-list" ref="target" >
         <li v-for="item in goodsList" :key="item.id">
           <RouterLink to="/">
-            <img :src="item.picture" alt="">
-            <p class="name ellipsis">{{item.name}}</p>
-            <p class="price">&yen;{{item.price}}</p>
+            <img :src="item.picture" alt="" />
+            <p class="name">{{ item.title }}</p>
+            <p class="desc">{{ item.alt }}</p>
           </RouterLink>
         </li>
       </ul>
@@ -17,22 +16,18 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import HomePanel from './HomePanel.vue'
-import { findNew } from '@/api/home'
+import { findPopular } from '@/api/home'
+import { ref } from 'vue'
 import { useLazyData } from '@/hooks'
 export default {
-  name: 'HomeNew',
+  name: 'HomePopular',
   components: {
     HomePanel
   },
   setup () {
-    // const goodsList = ref([])
-    // findNew().then(data => {
-    //   goodsList.value = data.result
-    // })
     const target = ref(null)
-    const goodsList = useLazyData(target, findNew)
+    const goodsList = useLazyData(target, findPopular)
 
     return { goodsList, target }
   }
@@ -43,11 +38,10 @@ export default {
 .goods-list {
   display: flex;
   justify-content: space-between;
-  height: 406px;
+  height: 426px;
   li {
     width: 306px;
     height: 406px;
-    background: #f0f9f4;
     .hoverShadow();
     img {
       width: 306px;
@@ -55,11 +49,12 @@ export default {
     }
     p {
       font-size: 22px;
-      padding: 12px 30px 0 30px;
+      padding-top: 12px;
       text-align: center;
     }
-    .price {
-      color: @priceColor;
+    .desc {
+      color: #999;
+      font-size: 18px;
     }
   }
 }

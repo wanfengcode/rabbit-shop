@@ -1,11 +1,18 @@
 <template>
+<!-- 面板设计
+  左上一级标题和二级标题,具体值由父组件传入
+  右上为具名插槽命名为right
+  主题部分为默认插槽
+ -->
  <div class="home-panel">
     <div class="container">
       <div class="head">
         <h3>{{ title }}<small>{{ subTitle }}</small></h3>
-        <slot name="right" />
+      <!-- 具名插槽 -->
+      <slot name="right" ></slot>
       </div>
-      <slot />
+    <!-- 默认插槽 -->
+     <slot></slot>
     </div>
   </div>
 </template>
