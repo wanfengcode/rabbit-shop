@@ -1,7 +1,7 @@
 <template>
   <!-- 产品区块中,单个商品的结构样式 -->
   <div class="goodsItem">
-    <RouterLink :to="`/product/${goods.id}`" class="image">
+    <RouterLink to="/" class="image">
       <img
         v-lazyload="goods.picture"
         alt=""
