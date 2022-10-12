@@ -4,7 +4,7 @@
       <!-- 面包屑导航 -->
       <RabbitBread>
         <rabbit-bread-item to="/">首页</rabbit-bread-item>
-        <rabbit-bread-item>{{ topCategory.name }}</rabbit-bread-item>
+        <rabbit-bread-item >{{ topCategory.name }}</rabbit-bread-item>
       </RabbitBread>
       <!-- 轮播图 -->
       <rabbit-carousel
@@ -25,14 +25,14 @@
         </ul>
       </div>
       <!-- 二级分类下的具体商品 -->
-      <div class="ref-goods">
+      <div class="ref-goods" v-for="item in subList" :key="item.id">
         <div class="head">
-          <h3>- 海鲜 -</h3>
+          <h3>- {{item.name}} -</h3>
           <p class="tag">温暖柔软，品质之选</p>
           <RabbitMore class="rabbit-more"></RabbitMore>
         </div>
         <div class="body">
-          <CategoryGoodsItem v-for="i in 5" :key="i"></CategoryGoodsItem>
+          <CategoryGoodsItem v-for="goods in item.goods" :key="goods.id" :goods="goods" ></CategoryGoodsItem>
         </div>
       </div>
     </div>
@@ -40,32 +40,53 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { findBanner } from '@/api/home'
 import CategoryGoodsItem from './components/CategoryGoodsItem'
+import { findBanner } from '@/api/home'
+import { findTopCategory } from '@/api/category'
+
 export default {
   name: 'TopCatagory',
   components: { CategoryGoodsItem },
   setup () {
+    const store = useStore()
+    const route = useRoute()
+
     // 获取轮播图数据
     const bannerList = ref([])
     findBanner().then((data) => {
       bannerList.value = data.result
     })
 
-    // 获取全部分类
-    const store = useStore()
-    const route = useRoute()
+    // 根据id获取对应的一级分类
     const topCategory = computed(() => {
+      let defaultCategory = {}
       const item = store.state.category.list.find((item) => {
         return item.id === route.params.id
       })
-      return item
+      if (item) {
+        defaultCategory = item
+      }
+      return defaultCategory
     })
 
-    return { bannerList, topCategory }
+    // 获取二级分类下各个商品信息
+    const subList = ref([])
+    const getSubList = () => {
+      findTopCategory(route.params.id).then(data => {
+        subList.value = data.result.children
+        return subList
+      })
+    }
+    watch(() => route.params.id, (newVal) => {
+      if (newVal) {
+        getSubList()
+      }
+    }, { immediate: true })
+
+    return { bannerList, topCategory, subList }
   }
 }
 </script>
