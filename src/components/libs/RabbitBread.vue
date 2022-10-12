@@ -1,4 +1,3 @@
-
 <script>
 import { h } from 'vue'
 export default {
@@ -12,12 +11,13 @@ export default {
             child是创建标签的子节点
     */
     //    this.$slots用于获取插槽的dom结构，default()方法返回默认插槽的dom结构；具名插槽则后面接具体的插槽名称
-    const nodes = this.$slots.default()
+    const nodeList = this.$slots.default()
     const dynamicList = []
-    nodes.forEach((item, index) => {
-      dynamicList.push(item)
-      if (index < nodes.length - 1) {
-        dynamicList.push(h('i', { class: 'iconfont icon-angle-right' }))
+    nodeList.forEach((node, index) => {
+      dynamicList.push(node)
+      if (index < nodeList.length - 1) {
+        const iNode = h('i', { class: 'iconfont icon-angle-right' })
+        dynamicList.push(iNode)
       }
     })
 

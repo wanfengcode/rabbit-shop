@@ -4,7 +4,9 @@
       <!-- 面包屑导航 -->
       <RabbitBread>
         <rabbit-bread-item to="/">首页</rabbit-bread-item>
-        <rabbit-bread-item >{{ topCategory.name }}</rabbit-bread-item>
+        <Transition name="fade-right">
+          <rabbit-bread-item :key="topCategory.id" >{{ topCategory.name }}</rabbit-bread-item>
+        </Transition>
       </RabbitBread>
       <!-- 轮播图 -->
       <rabbit-carousel
@@ -27,12 +29,16 @@
       <!-- 二级分类下的具体商品 -->
       <div class="ref-goods" v-for="item in subList" :key="item.id">
         <div class="head">
-          <h3>- {{item.name}} -</h3>
+          <h3>- {{ item.name }} -</h3>
           <p class="tag">温暖柔软，品质之选</p>
           <RabbitMore class="rabbit-more"></RabbitMore>
         </div>
         <div class="body">
-          <CategoryGoodsItem v-for="goods in item.goods" :key="goods.id" :goods="goods" ></CategoryGoodsItem>
+          <CategoryGoodsItem
+            v-for="goods in item.goods"
+            :key="goods.id"
+            :goods="goods"
+          ></CategoryGoodsItem>
         </div>
       </div>
     </div>
@@ -75,16 +81,20 @@ export default {
     // 获取二级分类下各个商品信息
     const subList = ref([])
     const getSubList = () => {
-      findTopCategory(route.params.id).then(data => {
+      findTopCategory(route.params.id).then((data) => {
         subList.value = data.result.children
         return subList
       })
     }
-    watch(() => route.params.id, (newVal) => {
-      if (newVal) {
-        getSubList()
-      }
-    }, { immediate: true })
+    watch(
+      () => route.params.id,
+      (newVal) => {
+        if (newVal) {
+          getSubList()
+        }
+      },
+      { immediate: true }
+    )
 
     return { bannerList, topCategory, subList }
   }
