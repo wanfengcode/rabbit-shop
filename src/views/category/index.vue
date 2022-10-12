@@ -89,7 +89,8 @@ export default {
     watch(
       () => route.params.id,
       (newVal) => {
-        if (newVal) {
+        // 判断当id变化且当前路由地址路径与参照的路由地址路径相等时发请求
+        if (newVal && `/category/${newVal}` === route.path) {
           getSubList()
         }
       },
