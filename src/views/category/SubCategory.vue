@@ -5,9 +5,8 @@
       <sub-bread></sub-bread>
       <!-- 筛选区 -->
       <sub-filter></sub-filter>
-      <!-- 复选框测试 -->
-      <rabbit-checked-box v-model="check">all</rabbit-checked-box>{{check}}
-      <!-- 结果区 -->
+      <!-- 结果区 商品排序 + 商品列表 -->
+      <SubSort></SubSort>
     </div>
   </div>
 </template>
@@ -15,12 +14,14 @@
 <script>
 import SubBread from './components/SubBread.vue'
 import SubFilter from './components/SubFilter.vue'
+import SubSort from './components/SubSort.vue'
 import { ref } from 'vue'
 export default {
   name: 'SubCategory',
   components: {
     SubBread,
-    SubFilter
+    SubFilter,
+    SubSort
   },
   setup () {
     const check = ref(false)
