@@ -1,5 +1,5 @@
 <template>
-    <RouterLink to="/" class='categoryGoodsItem'>
+    <RouterLink to="/" class='goodsItem'>
     <img :src="goods.picture" alt="">
     <p class="name ellipsis">{{goods.name}}</p>
     <p class="desc ellipsis">{{goods.desc}}</p>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'CategoryGoodsItem',
+  name: 'GoodsItem',
   props: {
     goods: Object,
     default: () => ({})
@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.categoryGoodsItem {
+.goodsItem {
   display: block;
   width: 220px;
   padding: 20px 30px;

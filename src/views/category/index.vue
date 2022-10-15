@@ -34,11 +34,11 @@
           <RabbitMore class="rabbit-more"></RabbitMore>
         </div>
         <div class="body">
-          <CategoryGoodsItem
+          <GoodsItem
             v-for="goods in item.goods"
             :key="goods.id"
             :goods="goods"
-          ></CategoryGoodsItem>
+          ></GoodsItem>
         </div>
       </div>
     </div>
@@ -49,13 +49,13 @@
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import CategoryGoodsItem from './components/CategoryGoodsItem'
+import GoodsItem from './components/GoodsItem'
 import { findBanner } from '@/api/home'
 import { findTopCategory } from '@/api/category'
 
 export default {
   name: 'TopCatagory',
-  components: { CategoryGoodsItem },
+  components: { GoodsItem },
   setup () {
     const store = useStore()
     const route = useRoute()
