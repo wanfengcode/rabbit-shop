@@ -2,19 +2,20 @@
   <div class="subCategory">
     <div class="container">
       <!-- 面包屑导航 -->
-      <sub-bread></sub-bread>
+      <SubBread></SubBread>
       <!-- 筛选区 -->
-      <sub-filter></sub-filter>
-      <!-- 结果区 商品排序 + 商品列表 -->
+      <SubFilter @filterChanged="filterChanged"></SubFilter>
+      <!-- 结果区 商品类型排序 + 商品列表 -->
       <div class="goodsList">
-        <!-- 商品排序 -->
-        <SubSort></SubSort>
+        <!-- 商品类型排序 -->
+        <SubSort @typeChanged = "typeChanged"></SubSort>
         <!-- 商品列表 -->
         <ul>
           <li v-for="goods in goodsList" :key="goods.id">
             <GoodsItem :goods="goods"></GoodsItem>
           </li>
         </ul>
+        <!-- 该组件进入页面的可视区域时，触发loadingData事件，执行getData函数向后台发送数据请求 -->
         <RabbitInfiniteLoad :loading="loading" :finished="finished" @loadingData="getData" ></RabbitInfiniteLoad>
       </div>
     </div>
@@ -62,7 +63,7 @@ export default {
           goodsList.value.push(...data.result.items)
           reqParams.page++
         } else {
-          // 当数据加载完毕，将finished值改为true；可以添加数据加载完毕提示
+          // 当数据加载完毕，将finished值改为true；此时展示数据加载完毕提示
           finished.value = true
         }
         loading.value = false
@@ -72,6 +73,7 @@ export default {
     watch(() => route.params.id, (newVal) => {
       if (newVal && `/category/sub/${newVal}` === route.path) {
         finished.value = false
+        // 将goodsList设为空数组，即此时商品列表没有数据显示无限加载组件进入可视区域触发loadingData事件，重新发送数据请求
         goodsList.value = []
         reqParams = {
           page: 1,
@@ -80,7 +82,23 @@ export default {
       }
     })
 
-    return { loading, finished, getData, goodsList }
+    // 排序类型发生变化时，重新发送商品列表数据请求
+    const typeChanged = (sortCondition) => {
+      finished.value = false
+      // 合并请求参数，保留之前参数
+      reqParams = { ...reqParams, ...sortCondition }
+      reqParams.page = 1
+      goodsList.value = []
+    }
+    // 筛选区商品属性发生变化时，重新发送商品列表数据请求
+    const filterChanged = (filterCondition) => {
+      finished.value = false
+      reqParams = { ...reqParams, ...filterCondition }
+      reqParams.page = 1
+      goodsList.value = []
+    }
+
+    return { loading, finished, getData, goodsList, typeChanged, filterChanged }
   }
 }
 </script>

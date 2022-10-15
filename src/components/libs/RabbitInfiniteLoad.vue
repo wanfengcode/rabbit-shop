@@ -32,10 +32,9 @@ export default {
 
     useIntersectionObserver(target, ([{ isIntersecting }]) => {
       if (isIntersecting) {
-        console.log('进入可视区')
         /*
             进入可视区后触发数据加载事件，触发条件：
-                 loading值是否为true即数据请求是否正在加载，finished值是否为true即响应的数据是否加载完毕
+                 数据请求完毕且数据加载完毕
         */
         if (!props.loading && !props.finished) {
           emit('loadingData')

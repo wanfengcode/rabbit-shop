@@ -12,8 +12,8 @@
       </a>
     </div>
     <div class="check">
-      <RabbitCheckedBox v-model="sortCondition.invertory" >仅显示有货商品</RabbitCheckedBox>
-      <RabbitCheckedBox v-model="sortCondition.onlyDiscount" >仅显示特惠商品</RabbitCheckedBox>
+      <RabbitCheckedBox @update:modelValue="change" v-model="sortCondition.invertory" >仅显示有货商品</RabbitCheckedBox>
+      <RabbitCheckedBox @update:modelValue="change" v-model="sortCondition.onlyDiscount" >仅显示特惠商品</RabbitCheckedBox>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ import { reactive } from 'vue'
 export default {
   components: { },
   name: 'SubSort',
-  setup () {
+  setup (props, { emit }) {
     const sortCondition = reactive({
       // 是否有库存
       inventory: false,
@@ -50,9 +50,14 @@ export default {
         sortCondition.sortFiled = type
         sortCondition.sortMethod = null
       }
+      // 向外层(父)组件提交触发事件，改变排序条件
+      emit('typeChanged', sortCondition)
+    }
+    const change = () => {
+      emit('typeChanged', sortCondition)
     }
 
-    return { sortCondition, changeCondition }
+    return { sortCondition, changeCondition, change }
   }
 }
 </script>
