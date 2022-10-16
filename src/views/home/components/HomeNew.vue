@@ -5,7 +5,7 @@
       <!-- 面板内容 -->
       <ul class="goods-list" ref="target" >
         <li v-for="item in goodsList" :key="item.id">
-          <RouterLink to="/">
+          <RouterLink :to="`/product/${item.id}`">
             <img :src="item.picture" alt="">
             <p class="name ellipsis">{{item.name}}</p>
             <p class="price">&yen;{{item.price}}</p>

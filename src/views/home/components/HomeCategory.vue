@@ -18,7 +18,7 @@
       <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
       <ul v-if="currentCategory && currentCategory.goods" >
         <li v-for="item in currentCategory.goods" :key="item.id">
-          <RouterLink to="/">
+          <RouterLink :to="`/product/${item.id}`">
             <img
               :src="item.picture"
               alt=""
