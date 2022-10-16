@@ -1,17 +1,26 @@
 <template>
-  <div class="goodsPage">
+  <div class="goodsPage" v-if="goods">
     <div class="container">
       <!-- 面包屑 -->
       <RabbitBread>
         <RabbitBreadItem to="/">首页</RabbitBreadItem>
-        <RabbitBreadItem to="/">手机</RabbitBreadItem>
-        <RabbitBreadItem to="/">华为</RabbitBreadItem>
-        <RabbitBreadItem to="/">p30</RabbitBreadItem>
+        <RabbitBreadItem :to="`/category/${goods.categories[1].id}`">{{
+          goods.categories[1].name
+        }}</RabbitBreadItem>
+        <RabbitBreadItem :to="`/category/sub/${goods.categories[0].id}`">{{
+          goods.categories[0].name
+        }}</RabbitBreadItem>
+        <RabbitBreadItem>{{ goods.name }}</RabbitBreadItem>
       </RabbitBread>
       <!-- 商品信息 -->
-      <div class="goods-info"></div>
+      <div class="goods-info">
+        <div class="media">
+          <GoodsImage :images="goods.mainPictures"></GoodsImage>
+        </div>
+        <div class="spec"></div>
+      </div>
       <!-- 商品推荐 -->
-      <GoodsRelevant></GoodsRelevant>
+      <GoodsRelevant v-if="goods"></GoodsRelevant>
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
@@ -29,11 +38,49 @@
 
 <script>
 import GoodsRelevant from './components/GoodsRelevant.vue'
+import GoodsImage from './components/GoodsImage.vue'
+import { findGoods } from '@/api/goods'
+import { useRoute } from 'vue-router'
+import { watch, ref, nextTick } from 'vue'
 export default {
   name: 'GoodsPage',
   components: {
-    GoodsRelevant
+    GoodsRelevant,
+    GoodsImage
+  },
+  setup () {
+    // 获取商品详情数据
+    const goods = getGoods()
+
+    return { goods }
   }
+}
+
+// 获取商品详情
+const getGoods = () => {
+  const route = useRoute()
+  const goods = ref(null)
+
+  watch(
+    () => route.params.id,
+    (newVal) => {
+      if (newVal && `/product/${newVal}` === route.path) {
+        findGoods(route.params.id).then((data) => {
+          /* 让商品的数据为null值，目的在于让v-if判断goods存在与否才渲染的组件能够销毁和重新创建
+            nextTick()方法将goods的赋值操作放在了任务队列中，当同步任务执行完毕后执行任务队列中的异步任务
+            从而实现先将goods值赋予null也就是没有数据，后将返回的请求结果赋值给goods
+        */
+          goods.value = null
+          nextTick(() => {
+            goods.value = data.result
+          })
+        })
+      }
+    },
+    { immediate: true }
+  )
+
+  return goods
 }
 </script>
 
@@ -41,6 +88,16 @@ export default {
 .goods-info {
   min-height: 600px;
   background: #fff;
+  display: flex;
+  .media {
+    width: 580px;
+    height: 600px;
+    padding: 30px 50px;
+  }
+  .spec {
+    flex: 1;
+    padding: 30px 30px 30px 0;
+  }
 }
 .goods-footer {
   display: flex;
@@ -62,4 +119,5 @@ export default {
   min-height: 600px;
   background: #fff;
   margin-top: 20px;
-}</style>
+}
+</style>
