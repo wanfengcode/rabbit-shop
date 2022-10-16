@@ -17,7 +17,9 @@
         <div class="media">
           <GoodsImage :images="goods.mainPictures"></GoodsImage>
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+
+        </div>
       </div>
       <!-- 商品推荐 -->
       <GoodsRelevant v-if="goods"></GoodsRelevant>
