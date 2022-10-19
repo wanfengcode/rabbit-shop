@@ -22,6 +22,7 @@
         <!-- 商品详情展示 -->
         <div class="spec">
           <GoodsInfo :goods="goods" ></GoodsInfo>
+          <GoodsSku :goods="goods"></GoodsSku>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -46,6 +47,7 @@ import GoodsRelevant from './components/GoodsRelevant.vue'
 import GoodsImage from './components/GoodsImage.vue'
 import GoodsSales from './components/GoodsSales.vue'
 import GoodsInfo from './components/GoodsInfo.vue'
+import GoodsSku from './components/GoodsSku.vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
 import { watch, ref, nextTick } from 'vue'
@@ -55,7 +57,8 @@ export default {
     GoodsRelevant,
     GoodsImage,
     GoodsSales,
-    GoodsInfo
+    GoodsInfo,
+    GoodsSku
   },
   setup () {
     // 获取商品详情数据

@@ -32,7 +32,6 @@ export default {
     }
   },
   setup (props, { emit }) {
-    console.log(props.fullAddress)
     // show用于控制城市选项框显示，target用于绑定元素
     const show = ref(false)
     const target = ref(null)
