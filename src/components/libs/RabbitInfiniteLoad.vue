@@ -1,6 +1,6 @@
 <template>
-<!-- 无限加载组件 -->
-      <div class="rabbitInfiniteLoad" ref="target" >
+  <!-- 无限加载组件 -->
+  <div class="rabbitInfiniteLoad" ref="target">
     <div class="loading" v-if="loading">
       <span class="img"></span>
       <span class="text">正在加载...</span>
@@ -30,17 +30,21 @@ export default {
   setup (props, { emit }) {
     const target = ref(null)
 
-    useIntersectionObserver(target, ([{ isIntersecting }]) => {
-      if (isIntersecting) {
-        /*
+    useIntersectionObserver(
+      target,
+      ([{ isIntersecting }]) => {
+        if (isIntersecting) {
+          /*
             进入可视区后触发数据加载事件，触发条件：
                  数据请求完毕且数据加载完毕
         */
-        if (!props.loading && !props.finished) {
-          emit('loadingData')
+          if (!props.loading && !props.finished) {
+            emit('loadingData')
+          }
         }
-      }
-    }, { threshold: 0 })
+      },
+      { threshold: 0 }
+    )
 
     return { target }
   }

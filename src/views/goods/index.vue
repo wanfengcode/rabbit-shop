@@ -14,11 +14,14 @@
       </RabbitBread>
       <!-- 商品信息 -->
       <div class="goods-info">
+        <!-- 图片预览区 -->
         <div class="media">
           <GoodsImage :images="goods.mainPictures"></GoodsImage>
+          <GoodsSales></GoodsSales>
         </div>
+        <!-- 商品详情展示 -->
         <div class="spec">
-
+          <GoodsInfo :goods="goods" ></GoodsInfo>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -41,6 +44,8 @@
 <script>
 import GoodsRelevant from './components/GoodsRelevant.vue'
 import GoodsImage from './components/GoodsImage.vue'
+import GoodsSales from './components/GoodsSales.vue'
+import GoodsInfo from './components/GoodsInfo.vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
 import { watch, ref, nextTick } from 'vue'
@@ -48,12 +53,14 @@ export default {
   name: 'GoodsPage',
   components: {
     GoodsRelevant,
-    GoodsImage
+    GoodsImage,
+    GoodsSales,
+    GoodsInfo
   },
   setup () {
     // 获取商品详情数据
     const goods = getGoods()
-
+    // console.log(goods)
     return { goods }
   }
 }

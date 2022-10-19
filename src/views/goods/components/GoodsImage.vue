@@ -58,7 +58,7 @@ export default {
     // 监听elementX, elementY, isOutside这三个变量的数据变化，获取遮罩层和大图背景图位置
     watch([elementX, elementY, isOutside], () => {
       show.value = !isOutside.value
-      // 记录位置偏移量
+      // 记录遮罩层、大图背景图位置偏移量
       const position = { x: 0, y: 0 }
       if (elementX.value < 100) {
         position.x = 0
