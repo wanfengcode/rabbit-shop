@@ -83,14 +83,26 @@ const updateSkuDisabled = (specs, pathMap) => {
       if (value.selected) {
         return
       }
-      // 当前规格没有被选中，则将其name属性值套入到选中参数的数组中，位置必须严格在遍历到的当前规格下
+      // 当前参数没有被选中，则将其name属性值套入到选中参数的数组中，位置必须严格在遍历到的当前规格下
       selectedValueArr[index] = value.name
-      // 将数组转为路径字典关键字
+      // 将数组过滤掉undefined值并做字符拼接后作为路径字典关键字
       const key = selectedValueArr.filter(val => val).join(split)
       // 拿着关键字匹配路径字典，将结果返回给disabled
       value.disabled = !pathMap[key]
     })
   })
+}
+
+// 根据skuId选中对应商品的每个参数
+const selectedValById = (goods, skuId) => {
+  // 找到skuId对应的sku对象
+  const sku = goods.skus.find(sku => sku.id === skuId)
+  if (sku) {
+    goods.specs.forEach((item, index) => {
+      const value = item.values.find(value => value.name === sku.specs[index].valueName)
+      value.selected = true
+    })
+  }
 }
 
 export default {
@@ -99,6 +111,10 @@ export default {
     goods: {
       type: Object,
       default: () => ({})
+    },
+    skuId: {
+      type: String,
+      default: ''
     }
   },
   setup (props) {
@@ -130,6 +146,8 @@ export default {
       // 每次选中商品参数后，都更新一次参数是否被禁用
       updateSkuDisabled(props.goods.specs, pathMap)
     }
+
+    selectedValById(props.goods, props.skuId)
 
     return { choosen, pathMap }
   }
