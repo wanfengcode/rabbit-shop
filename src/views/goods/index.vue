@@ -21,9 +21,14 @@
         </div>
         <!-- 商品详情展示 -->
         <div class="spec">
+          <!-- 商品信息 -->
           <GoodsInfo :goods="goods" ></GoodsInfo>
+          <!-- 商品规格参数 -->
           <GoodsSku :goods="goods" @skuChanged="skuChanged"></GoodsSku>
+          <!-- 数量选择 -->
           <RabbitNumberBox v-model="defaultCount" :max="goods.inventory" label="数量"></RabbitNumberBox>
+          <!-- 加入购物车按钮 -->
+          <RabbitBtn style="margin-top:20px;margin-left:60px">加入购物车</RabbitBtn>
         </div>
       </div>
       <!-- 商品推荐 -->
