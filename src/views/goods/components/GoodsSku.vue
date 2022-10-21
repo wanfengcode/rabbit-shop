@@ -149,7 +149,9 @@ export default {
         选完所有规格的参数后，需要向父组件传递包含完整sku信息的对象；若没有选中所有规格对应的参数则传递一个空对象
         对象的参数有：sku的id、price、oldPrice、inventory、specsText;specsText为拼接后的完整参数信息提供给购物车使用
     */
+      //    获取当前选中参数数组并过滤掉数组中值为undefined的位置
       const selectedValues = getSlectedValue(props.goods.specs).filter(val => val)
+      //   若当前选中数组的长度与存储商品信息goods中用于记录商品规格属性specs的长度相等，说明一条完整的sku参数以选择完毕
       if (selectedValues.length === props.goods.specs.length) {
         const currentSkuId = pathMap[selectedValues.join(split)]
         const currentSku = props.goods.skus.find(sku => sku.id === currentSkuId[0])

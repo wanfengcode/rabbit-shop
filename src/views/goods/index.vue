@@ -23,6 +23,7 @@
         <div class="spec">
           <GoodsInfo :goods="goods" ></GoodsInfo>
           <GoodsSku :goods="goods" @skuChanged="skuChanged"></GoodsSku>
+          <RabbitNumberBox v-model="defaultCount" :max="goods.inventory" label="数量"></RabbitNumberBox>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -73,7 +74,10 @@ export default {
       }
     }
 
-    return { goods, skuChanged }
+    // RabbitNumberBox 组件
+    const defaultCount = ref(1)
+
+    return { goods, skuChanged, defaultCount }
   }
 }
 
