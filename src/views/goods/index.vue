@@ -32,7 +32,7 @@
         </div>
       </div>
       <!-- 商品推荐 -->
-      <GoodsRelevant v-if="goods"></GoodsRelevant>
+      <GoodsRelevant v-if="goods" :goodsId = "goods.id"></GoodsRelevant>
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
