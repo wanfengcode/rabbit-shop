@@ -22,7 +22,7 @@
         <!-- 商品详情展示 -->
         <div class="spec">
           <GoodsInfo :goods="goods" ></GoodsInfo>
-          <GoodsSku :goods="goods"></GoodsSku>
+          <GoodsSku :goods="goods" @skuChanged="skuChanged"></GoodsSku>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -63,8 +63,17 @@ export default {
   setup () {
     // 获取商品详情数据
     const goods = getGoods()
-    // console.log(goods)
-    return { goods }
+
+    // GoodsSku组件的触发事件skuChanged
+    const skuChanged = (skuInfo) => {
+      if (skuInfo.skuId) {
+        goods.value.price = skuInfo.price
+        goods.value.oldPrice = skuInfo.oldPrice
+        goods.value.inventory = skuInfo.inventory
+      }
+    }
+
+    return { goods, skuChanged }
   }
 }
 

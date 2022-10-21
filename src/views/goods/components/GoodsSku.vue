@@ -4,8 +4,8 @@
       <dt>{{item.name}}</dt>
       <dd>
         <template v-for="value in item.values" :key="value.name">
-        <img @click="choosen(item.values,value)" :class="{selected:value.selected , disabled:value.disabled}" v-if="value.picture" :src="value.picture" :title="value.name">
-        <span @click="choosen(item.values,value)" :class="{selected:value.selected, disabled:value.disabled}" v-else>{{value.name}}</span>
+        <img @click="skuIDChoosen(item.values,value)" :class="{selected:value.selected , disabled:value.disabled}" v-if="value.picture" :src="value.picture" :title="value.name">
+        <span @click="skuIDChoosen(item.values,value)" :class="{selected:value.selected, disabled:value.disabled}" v-else>{{value.name}}</span>
         </template>
       </dd>
     </dl>
@@ -117,7 +117,7 @@ export default {
       default: ''
     }
   },
-  setup (props) {
+  setup (props, { emit }) {
     // 获取sku路径字典
     const pathMap = getPathMap(props.goods.skus)
     // 组件初始化时，更新商品规格的禁用状态
@@ -130,7 +130,7 @@ export default {
      不存在则先遍历数组values将每个value的selected属性设为false
      遍历完成后将当前value的selected值取反，以此确保当前规格下只有一个参数被选中
      */
-    const choosen = (values, value) => {
+    const skuIDChoosen = (values, value) => {
       // 当传入的value，其disabled属性为真时，则直接返回不做选中操作
       if (value.disabled) {
         return
@@ -145,11 +145,29 @@ export default {
       }
       // 每次选中商品参数后，都更新一次参数是否被禁用
       updateSkuDisabled(props.goods.specs, pathMap)
+      /*
+        选完所有规格的参数后，需要向父组件传递包含完整sku信息的对象；若没有选中所有规格对应的参数则传递一个空对象
+        对象的参数有：sku的id、price、oldPrice、inventory、specsText;specsText为拼接后的完整参数信息提供给购物车使用
+    */
+      const selectedValues = getSlectedValue(props.goods.specs).filter(val => val)
+      if (selectedValues.length === props.goods.specs.length) {
+        const currentSkuId = pathMap[selectedValues.join(split)]
+        const currentSku = props.goods.skus.find(sku => sku.id === currentSkuId[0])
+        emit('skuChanged', {
+          skuId: currentSku.id,
+          price: currentSku.price,
+          oldPrice: currentSku.oldPrice,
+          inventory: currentSku.inventory,
+          specsText: currentSku.specs.reduce((p, c) => `${p} ${c.name}: ${c.valueName}`, '').trim()
+        })
+      } else {
+        emit('skuChanged', {})
+      }
     }
 
     selectedValById(props.goods, props.skuId)
 
-    return { choosen, pathMap }
+    return { skuIDChoosen, pathMap }
   }
 }
 
