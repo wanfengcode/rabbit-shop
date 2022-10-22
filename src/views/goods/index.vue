@@ -39,7 +39,7 @@
           <!-- 商品+评价 -->
           <GoodsTabs></GoodsTabs>
           <!-- 注意事项 -->
-          <div class="goods-warn"></div>
+          <GoodsWarn></GoodsWarn>
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside">
@@ -59,9 +59,10 @@ import GoodsInfo from './components/GoodsInfo.vue'
 import GoodsSku from './components/GoodsSku.vue'
 import GoodsTabs from './components/GoodsTabs.vue'
 import GoodsHotList from './components/GoodsHotList.vue'
+import GoodsWarn from './components/GoodsWarn.vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref, nextTick, provide } from 'vue'
 export default {
   name: 'GoodsPage',
   components: {
@@ -71,7 +72,8 @@ export default {
     GoodsInfo,
     GoodsSku,
     GoodsTabs,
-    GoodsHotList
+    GoodsHotList,
+    GoodsWarn
   },
   setup () {
     // 获取商品详情数据
@@ -85,6 +87,9 @@ export default {
         goods.value.inventory = skuInfo.inventory
       }
     }
+
+    // 提供数据给后代组件使用
+    provide('goods', goods)
 
     // RabbitNumberBox 组件
     const defaultCount = ref(1)
