@@ -15,8 +15,15 @@ export const findRelevantGoods = ({ id, limit = 16 }) => {
 export const findHotGoods = ({ id, type = 1, limit = 3 }) => {
   return request('/goods/hot', 'get', { id, type, limit })
 }
-// 商品评价
+
+// 商品评价信息
 export const findGoodsComment = (id) => {
-  // return request(`/goods/${id}/evaluate`, 'get')
+  // return request(`/goods/${id}/evaluate`, 'get') 该接口尚未完善无法返回有效数据
+  // 前端测试接口
   return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`, 'get')
+}
+
+// 商品评价列表
+export const findGoodsCommentList = (id, params) => {
+  return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`, 'get', params)
 }
