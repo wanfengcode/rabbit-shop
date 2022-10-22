@@ -37,12 +37,15 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTabs></GoodsTabs>
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
         <!-- 24热榜+专题推荐 -->
-        <div class="goods-aside"></div>
+        <div class="goods-aside">
+          <GoodsHotList :type="1"></GoodsHotList>
+          <GoodsHotList :type="2"></GoodsHotList>
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +57,8 @@ import GoodsImage from './components/GoodsImage.vue'
 import GoodsSales from './components/GoodsSales.vue'
 import GoodsInfo from './components/GoodsInfo.vue'
 import GoodsSku from './components/GoodsSku.vue'
+import GoodsTabs from './components/GoodsTabs.vue'
+import GoodsHotList from './components/GoodsHotList.vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
 import { watch, ref, nextTick } from 'vue'
@@ -64,7 +69,9 @@ export default {
     GoodsImage,
     GoodsSales,
     GoodsInfo,
-    GoodsSku
+    GoodsSku,
+    GoodsTabs,
+    GoodsHotList
   },
   setup () {
     // 获取商品详情数据

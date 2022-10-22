@@ -10,3 +10,8 @@ export const findGoods = (id) => {
 export const findRelevantGoods = ({ id, limit = 16 }) => {
   return request('/goods/relevant', 'get', { id, limit })
 }
+
+// 热榜,id-->商品Id,limit-->返回数据的数量限制,type-->热榜类型，1--> 24小时榜、2-->周热销榜、3-->总热销榜
+export const findHotGoods = ({ id, type = 1, limit = 3 }) => {
+  return request('/goods/hot', 'get', { id, type, limit })
+}
