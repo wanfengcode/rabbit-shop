@@ -15,3 +15,8 @@ export const findRelevantGoods = ({ id, limit = 16 }) => {
 export const findHotGoods = ({ id, type = 1, limit = 3 }) => {
   return request('/goods/hot', 'get', { id, type, limit })
 }
+// 商品评价
+export const findGoodsComment = (id) => {
+  // return request(`/goods/${id}/evaluate`, 'get')
+  return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`, 'get')
+}

@@ -39,7 +39,6 @@ export default {
 
     findHotGoods({ id: route.params.id, type: props.type }).then(data => {
       goodsList.value = data.result
-      console.log(goodsList)
     })
 
     return { title, goodsList }
