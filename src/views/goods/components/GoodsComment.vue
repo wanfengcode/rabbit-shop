@@ -32,33 +32,27 @@
       <a @click="sortFieldChanged('praisePercent')" :class="{active:reqParams.sortField === 'praisePercent'}" href="javascript:;">最热</a>
     </div>
     <!-- 评价列表 -->
-    <div class="list">
-      <div class="item">
+    <div class="list" v-if="commentList">
+      <div class="item" v-for="item in commentList" :key="item.id">
         <div class="user">
           <img
-            src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png"
+            :src="item.member.avatar"
             alt=""
           />
-          <span>兔****m</span>
+          <span>{{formatNickName(item.member.nickname)}}</span>
         </div>
         <div class="body">
           <div class="score">
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx02"></i>
-            <span class="attr">颜色：黑色 尺码：M</span>
+            <i v-for="i in item.score" :key="i" class="iconfont icon-wjx01"></i>
+            <i v-for="i in 5-item.score" :key="i" class="iconfont icon-wjx02"></i>
+            <span class="attr">{{formatSpecs(item.orderInfo.specs)}}</span>
           </div>
           <div class="text">
-            网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大
-            而且耳机🎧确实正品 音质特别好 戴上这款耳机
-            听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电
-            最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了
+            {{item.content}}
           </div>
           <div class="time">
-            <span>2020-10-10 10:11:22</span>
-            <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+            <span>{{item.createTime}}</span>
+            <span class="zan"><i class="iconfont icon-dianzan"></i>{{item.praiseCount}}</span>
           </div>
         </div>
       </div>
@@ -76,6 +70,7 @@ export default {
     const route = useRoute()
     const currentIndex = ref(0)
     const commentInfos = ref(null)
+    const commentList = ref([])
     // 获取评价信息
     findGoodsComment(route.params.id).then((data) => {
       // 往tags中追加两个两个对象，名称为全部评价和有图
@@ -105,9 +100,12 @@ export default {
         reqParams.hasPicture = null
         reqParams.tag = currentTag.title
       }
+      //   重置页码
+      reqParams.page = 1
     }
     const sortFieldChanged = (field) => {
       reqParams.sortField = field
+      reqParams.page = 1
     }
 
     // 准备数据请求参数体
@@ -122,11 +120,20 @@ export default {
     // 监听reqParams的变化，发送数据请求
     watch(reqParams, () => {
       findGoodsCommentList(route.params.id, reqParams).then(data => {
-        console.log(data.result)
+        commentList.value = data.result.items
       })
     }, { immediate: true })
 
-    return { currentIndex, commentInfos, tagChanged, reqParams, sortFieldChanged }
+    // 格式化规格数据
+    const formatSpecs = (specs) => {
+      return specs.reduce((p, c) => ` ${p}  ${c.name}：${c.nameValue} `, '').trim()
+    }
+    // 格式化用户名
+    const formatNickName = (nickName) => {
+      return nickName.substr(0, 1) + '***' + nickName.substr(-1)
+    }
+
+    return { currentIndex, commentInfos, tagChanged, reqParams, sortFieldChanged, commentList, formatSpecs, formatNickName }
   }
 }
 </script>
