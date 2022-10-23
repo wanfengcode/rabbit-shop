@@ -50,6 +50,8 @@
           <div class="text">
             {{item.content}}
           </div>
+          <!-- 评论图片 -->
+          <GoodsCommentImg v-if="item.pictures.length" :imgs = "item.pictures"></GoodsCommentImg>
           <div class="time">
             <span>{{item.createTime}}</span>
             <span class="zan"><i class="iconfont icon-dianzan"></i>{{item.praiseCount}}</span>
@@ -64,8 +66,12 @@
 import { useRoute } from 'vue-router'
 import { reactive, ref, watch } from 'vue'
 import { findGoodsComment, findGoodsCommentList } from '@/api/goods'
+import GoodsCommentImg from './GoodsCommentImg.vue'
 export default {
   name: 'GoodsComment',
+  components: {
+    GoodsCommentImg
+  },
   setup () {
     const route = useRoute()
     const currentIndex = ref(0)
