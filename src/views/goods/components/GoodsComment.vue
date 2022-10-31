@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="sort">
+    <div class="sort" v-if="commentInfos">
       <span>排序：</span>
       <a @click="sortFieldChanged(null)" :class="{active:reqParams.sortField === null}" href="javascript:;">默认</a>
       <a @click="sortFieldChanged('createTime')" :class="{active:reqParams.sortField === 'createTime'}" href="javascript:;">最新</a>
@@ -59,6 +59,8 @@
         </div>
       </div>
     </div>
+    <!-- 分页 -->
+    <RabbitPagination v-if="total" @pageChanged="pageChanged" :total="total" :pageSize="reqParams.pageSize" :currentPage="reqParams.page"></RabbitPagination>
   </div>
 </template>
 
@@ -77,6 +79,7 @@ export default {
     const currentIndex = ref(0)
     const commentInfos = ref(null)
     const commentList = ref([])
+    const total = ref(0)
     // 获取评价信息
     findGoodsComment(route.params.id).then((data) => {
       // 往tags中追加两个两个对象，名称为全部评价和有图
@@ -127,6 +130,7 @@ export default {
     watch(reqParams, () => {
       findGoodsCommentList(route.params.id, reqParams).then(data => {
         commentList.value = data.result.items
+        total.value = data.result.counts
       })
     }, { immediate: true })
 
@@ -139,7 +143,12 @@ export default {
       return nickName.substr(0, 1) + '***' + nickName.substr(-1)
     }
 
-    return { currentIndex, commentInfos, tagChanged, reqParams, sortFieldChanged, commentList, formatSpecs, formatNickName }
+    // 分页组件触发事件
+    const pageChanged = (page) => {
+      reqParams.page = page
+    }
+
+    return { currentIndex, commentInfos, tagChanged, reqParams, sortFieldChanged, commentList, formatSpecs, formatNickName, total, pageChanged }
   }
 }
 </script>
