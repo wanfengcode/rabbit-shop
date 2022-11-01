@@ -4,7 +4,7 @@
       <ul>
         <template v-if="userMes.token">
           <li>
-            <a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a>
+            <a href="javascript:;"><i class="iconfont icon-user"></i>{{userMes.account}}</a>
           </li>
           <li><a href="javascript:;">退出登录</a></li>
         </template>

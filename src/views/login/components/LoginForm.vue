@@ -69,6 +69,9 @@ import { reactive, ref, watch } from 'vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation-schema'
 import Message from '@/components/libs/Message'
+import { userLogin } from '@/api/user'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 export default {
   name: 'LoginForm',
   components: {
@@ -76,6 +79,10 @@ export default {
     Field
   },
   setup () {
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+
     // 切换登录方式
     const isMsgLogin = ref(true)
     // 表单信息
@@ -106,8 +113,18 @@ export default {
     // 登录按钮触发事件
     const login = async () => {
       const validResult = await formTarget.value.validate()
-      console.log(validResult)
-      Message({ type: 'error', text: '信息输入错误' })
+      if (validResult) {
+        const { account, password } = form
+        userLogin({ account, password }).then(data => {
+          // 存储用户信息、路由跳转至原来页面或首页、信息提示
+          const { id, avator, nickname, account, mobile, token } = data.result
+          store.commit('user/setUser', { id, avator, nickname, account, mobile, token })
+          router.push(route.query.redirectUrl ? route.query.redirectUrl : '/')
+          Message({ type: 'success', text: '登录成功' })
+        }).catch(e => {
+          Message({ type: 'error', text: e.response.data.message })
+        })
+      }
     }
     // 切换登陆方式后，清空表单信息
     watch(isMsgLogin, () => {
