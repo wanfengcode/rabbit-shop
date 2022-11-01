@@ -13,7 +13,7 @@
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-user"></i>
-            <Field :class="{error:errors.account}" v-model="form.account" name='account' type="text" placeholder="请输入用户名"></Field>
+            <Field :class="{error:errors.account}" v-model="form.account"  name='account' type="text" placeholder="请输入用户名"></Field>
           </div>
           <div class="error" v-if="errors.account"><i class="iconfont icon-warning" />{{errors.account}}</div>
         </div>
@@ -77,7 +77,7 @@ export default {
   setup () {
     // 切换登录方式
     const isMsgLogin = ref(true)
-    // 表单校验信息
+    // 表单信息
     const form = reactive({
       isAgree: true,
       account: null,
