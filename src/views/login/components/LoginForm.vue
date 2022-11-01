@@ -68,6 +68,7 @@
 import { reactive, ref, watch } from 'vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation-schema'
+import Message from '@/components/libs/Message'
 export default {
   name: 'LoginForm',
   components: {
@@ -106,6 +107,7 @@ export default {
     const login = async () => {
       const validResult = await formTarget.value.validate()
       console.log(validResult)
+      Message({ type: 'error', text: '信息输入错误' })
     }
     // 切换登陆方式后，清空表单信息
     watch(isMsgLogin, () => {
