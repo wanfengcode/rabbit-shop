@@ -22,7 +22,7 @@ export default {
   code (value) {
     if (!value) return '请输入验证码'
     // 6位数字
-    if (!/^\d{6}$/.value) return '验证码为六位数字'
+    if (!/^\d{6}$/.test(value)) return '验证码为六位数字'
     return true
   },
   isAgree (value) {

@@ -6,7 +6,7 @@
           <li>
             <a href="javascript:;"><i class="iconfont icon-user"></i>{{userMes.account}}</a>
           </li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><a @click="logOut" href="javascript:;">退出登录</a></li>
         </template>
         <template v-else>
           <li><RouterLink to="/login">请先登录</RouterLink></li>
@@ -34,15 +34,25 @@
 <script>
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'NavBar',
   setup () {
     const store = useStore()
+    const router = useRouter()
     const userMes = computed(() => {
       return store.state.user.userMessage
     })
 
-    return { userMes }
+    // 退出登录
+    const logOut = () => {
+      // 清除本地存储用户信息和token
+      store.commit('user/setUser', {})
+      // 跳转登录页
+      router.push('/login')
+    }
+
+    return { userMes, logOut }
   }
 }
 </script>
