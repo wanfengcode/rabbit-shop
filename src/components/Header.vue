@@ -7,21 +7,19 @@
         <i class="iconfont icon-search"></i>
         <input type="text" placeholder="搜一搜" />
       </div>
-      <div class="cart">
-        <a class="curr" href="#">
-          <i class="iconfont icon-cart"></i><em>2</em>
-        </a>
-      </div>
+      <HeaderCart></HeaderCart>
     </div>
   </header>
 </template>
 
 <script>
 import HeaderNav from '@/components/HeaderNav.vue'
+import HeaderCart from './HeaderCart.vue'
 export default {
   name: 'Header',
   components: {
-    HeaderNav
+    HeaderNav,
+    HeaderCart
   }
 }
 </script>

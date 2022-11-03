@@ -7,6 +7,20 @@ export default {
       list: []
     }
   },
+  getters: {
+    // 有效商品列表
+    validList (state) {
+      return state.list.filter(item => item.stock > 0 && item.isEffective === true)
+    },
+    // 有效商品数量
+    validCount (state, getters) {
+      return getters.validList.reduce((p, c) => p + c.count, 0)
+    },
+    // 有效商品总金额
+    validAmount (state, getters) {
+      return getters.validList.reduce((p, c) => p + Math.round(c.nowPrice * 100) * c.count, 0) / 100
+    }
+  },
   mutations: {
     setCart (state, payload) {
       /*
