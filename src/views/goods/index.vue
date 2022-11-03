@@ -28,7 +28,7 @@
           <!-- 数量选择 -->
           <RabbitNumberBox v-model="defaultCount" :max="goods.inventory" label="数量"></RabbitNumberBox>
           <!-- 加入购物车按钮 -->
-          <RabbitBtn style="margin-top:20px;margin-left:60px">加入购物车</RabbitBtn>
+          <RabbitBtn @click="addCart" style="margin-top:20px;margin-left:60px">加入购物车</RabbitBtn>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -63,6 +63,8 @@ import GoodsWarn from './components/GoodsWarn.vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
 import { watch, ref, nextTick, provide } from 'vue'
+import { useStore } from 'vuex'
+import Message from '@/components/libs/Message'
 export default {
   name: 'GoodsPage',
   components: {
@@ -76,9 +78,11 @@ export default {
     GoodsWarn
   },
   setup () {
+    const store = useStore()
+
     // 获取商品详情数据
     const goods = getGoods()
-
+    const currentSku = ref(null)
     // GoodsSku组件的触发事件skuChanged
     const skuChanged = (skuInfo) => {
       if (skuInfo.skuId) {
@@ -86,6 +90,7 @@ export default {
         goods.value.oldPrice = skuInfo.oldPrice
         goods.value.inventory = skuInfo.inventory
       }
+      currentSku.value = skuInfo
     }
 
     // 提供数据给后代组件使用
@@ -94,7 +99,39 @@ export default {
     // RabbitNumberBox 组件
     const defaultCount = ref(1)
 
-    return { goods, skuChanged, defaultCount }
+    // 添加购物车
+    const addCart = () => {
+    // 约定本地存储购物车相关信息：
+    /*
+      skuId name  attrsText(商品属性)
+      picture price(加入时价格) nowPrice(当前价格)
+      selected stock count
+      isEffective(是否为有效商品) id(spuId)
+    */
+      if (currentSku.value && currentSku.value.skuId) {
+        const { skuId, price, inventory: stock, specsText: attrsText } = currentSku.value
+        const { name, mainPictures, id } = goods.value
+        store.dispatch('cart/setCart', {
+          id,
+          skuId,
+          name,
+          attrsText,
+          picture: mainPictures[0],
+          price,
+          nowPrice: price,
+          selected: true,
+          stock,
+          count: defaultCount.value,
+          isEffective: true
+        }).then(() => {
+          Message({ type: 'success', text: '成功加入购物车' })
+        })
+      } else {
+        Message({ type: 'warn', text: '请选择完整的商品规格' })
+      }
+    }
+
+    return { goods, skuChanged, defaultCount, addCart }
   }
 }
 

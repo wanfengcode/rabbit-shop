@@ -55,7 +55,7 @@
       <a @click="login" href="javascript:;" class="btn">登录</a>
     </Form>
     <div class="action">
-      <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
+      <!-- <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt=""> -->
       <div class="url">
         <a href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
@@ -65,11 +65,11 @@
 </template>
 
 <script>
-import { onUnmounted, reactive, ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation-schema'
 import Message from '@/components/libs/Message'
-import { msgCode, mobileLogin, userLogin } from '@/api/user'
+import { mobileLogin, msgCode, userLogin } from '@/api/user'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useIntervalFn } from '@vueuse/core'
@@ -134,9 +134,7 @@ export default {
           router.push(route.query.redirectUrl ? route.query.redirectUrl : '/')
           Message({ type: 'success', text: '登录成功' })
         } catch (e) {
-          if (e.response.data) {
-            Message({ type: 'error', text: e.response.data.message })
-          }
+          Message({ type: 'error', text: e.response.data.message })
         }
       }
     }
@@ -149,38 +147,34 @@ export default {
       form.code = null
     })
 
-    // 发送验证码倒计时
     const time = ref(0)
-    // useIntervalFn(callback,执行间隔,是否立即开启)函数用于实现倒计时,resume和pause方法分别用于开启和暂停
+
+    // 验证码倒计时,通过使用useIntervalFn(回调,时间间隔，是否立即开启)开启和关闭倒计时
     const { resume, pause } = useIntervalFn(() => {
       time.value--
       if (time.value <= 0) {
-        // 倒计时结果为零时停止
         pause()
       }
     }, 1000, false)
-    onUnmounted(() => {
-      pause()
-    })
-    // 发送短信验证码
+
     const sendCode = async () => {
       // 校验表单信息
+      // 成功则发送验证码，失败则提示相关错误信息
       const valid = localSchema.mobile(form.mobile)
       if (valid === true) {
-        // 校验成功，并且倒计时为零发送验证码请求
-        if (time.value <= 0) {
-          try {
+        try {
+          // 倒计时为0 发送验证码请求，开启60秒倒计时
+          if (time.value <= 0) {
             await msgCode(form.mobile)
-            Message({ type: 'success', text: '验证码已发送' })
+            Message({ type: 'success', text: '验证码已成功发送' })
             time.value = 60
-            // 开启定时器
             resume()
-          } catch (e) {
-            Message({ type: 'error', text: e.response.data.message || '发送失败' })
           }
+        } catch (e) {
+          Message({ type: 'error', text: e.response.data.message || '发送失败请稍后重试' })
         }
       } else {
-        // 校验失败,vee的Form组件提供setFieldError(校验字段，msg)函数用来提示校验结果，msg为校验结果的错误信息
+        // Form组件提供函数setFieldError(校验字段，信息提示)用于提示校验结果
         formTarget.value.setFieldError('mobile', valid)
       }
     }
@@ -281,8 +275,10 @@ export default {
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
+    flex-direction: row-reverse;
     align-items: center;
     .url {
+
       a {
         color: #999;
         margin-left: 10px;
