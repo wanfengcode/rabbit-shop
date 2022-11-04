@@ -20,7 +20,7 @@
               <p class="count">{{item.count}}</p>
             </div>
           </RouterLink>
-          <i class="iconfont icon-close-new"></i>
+          <i @click="deleteGoods(item.skuId)" class="iconfont icon-close-new"></i>
         </div>
       </div>
       <div class="foot">
@@ -44,6 +44,12 @@ export default {
     store.dispatch('cart/updateCart').then(() => {
       Message({ text: '购物车商品信息更新成功' })
     })
+
+    const deleteGoods = (skuId) => {
+      store.dispatch('cart/deleteCartGoods', skuId)
+    }
+
+    return { deleteGoods }
   }
 }
 </script>

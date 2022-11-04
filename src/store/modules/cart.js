@@ -50,6 +50,11 @@ export default {
           updateGoods[key] = payload[key]
         }
       }
+    },
+    // 删除购物车商品
+    deleteCartGoods (state, skuId) {
+      const goodsIndex = state.list.findIndex(item => item.skuId === skuId)
+      state.list.splice(goodsIndex, 1)
     }
   },
   actions: {
@@ -81,6 +86,16 @@ export default {
           }).catch(e => {
             reject(e)
           })
+        }
+      })
+    },
+    deleteCartGoods (ctx, skuId) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.userMessage.token) {
+          // 已登录
+        } else {
+          ctx.commit('deleteCartGoods', skuId)
+          resolve()
         }
       })
     }
