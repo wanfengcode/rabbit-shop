@@ -35,8 +35,16 @@
 </template>
 
 <script>
+import { useStore } from 'vuex'
+import Message from './libs/Message'
 export default {
-  name: 'HeaderCart'
+  name: 'HeaderCart',
+  setup () {
+    const store = useStore()
+    store.dispatch('cart/updateCart').then(() => {
+      Message({ text: '购物车商品信息更新成功' })
+    })
+  }
 }
 </script>
 

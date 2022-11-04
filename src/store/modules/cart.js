@@ -1,3 +1,5 @@
+import { updateCartGoods } from '@/api/cart'
+
 // 购物车模块
 export default {
   namespaced: true,
@@ -22,6 +24,7 @@ export default {
     }
   },
   mutations: {
+    // 设置购物车商品信息
     setCart (state, payload) {
       /*
           本地更新购物车列表
@@ -37,6 +40,16 @@ export default {
         state.list.splice(tempIndex, 1)
       }
       state.list.unshift(payload)
+    },
+    // 更新购物车商品的库存、价格和有效性
+    updateCart (state, payload) {
+      // 找到需要修改的商品信息
+      const updateGoods = state.list.find(item => item.skuId === payload.skuId)
+      for (const key in payload) {
+        if (payload[key] !== null && payload[key] !== undefined && payload[key] !== '') {
+          updateGoods[key] = payload[key]
+        }
+      }
     }
   },
   actions: {
@@ -48,6 +61,26 @@ export default {
           // 未登录
           ctx.commit('setCart', payload)
           resolve()
+        }
+      })
+    },
+    updateCart (ctx) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.userMessage.token) {
+          // 已登录
+        } {
+          // 未登录
+          const promiseArr = ctx.state.list.map(item => {
+            return updateCartGoods(item.skuId)
+          })
+          Promise.all(promiseArr).then(dataList => {
+            dataList.forEach((data, index) => {
+              ctx.commit('updateCart', { skuId: ctx.state.list[index].skuId, ...data.result })
+            })
+            resolve()
+          }).catch(e => {
+            reject(e)
+          })
         }
       })
     }
