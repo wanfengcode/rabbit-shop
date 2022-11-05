@@ -9,7 +9,7 @@
         <table>
           <thead>
             <tr>
-              <th width="120"><RabbitCheckedBox :modelValue="$store.getters['cart/isSelectedAll']" >全选</RabbitCheckedBox></th>
+              <th width="120"><RabbitCheckedBox @change="isSelectedAll" :modelValue="$store.getters['cart/isSelectedAll']" >全选</RabbitCheckedBox></th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
               <th width="180">数量</th>
@@ -19,8 +19,13 @@
           </thead>
           <!-- 有效商品 -->
           <tbody>
+            <tr v-if="$store.getters['cart/validList'].length === 0">
+                <td colspan="6">
+                    <EmptyCart></EmptyCart>
+                </td>
+            </tr>
             <tr v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
-              <td><RabbitCheckedBox :modelValue="goods.selected"></RabbitCheckedBox></td>
+              <td><RabbitCheckedBox @change="($event)=> btnChanged(goods.skuId,$event)" :modelValue="goods.selected"></RabbitCheckedBox></td>
               <td>
                 <div class="goods">
                   <RouterLink :to="`/product/${goods.id}`"><img :src="goods.picture" alt=""></RouterLink>
@@ -40,7 +45,7 @@
               <td class="tc"><p class="f16 red">&yen;{{goods.nowPrice * goods.count}}</p></td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p><a class="green" @click="deleteCartGoods(goods.skuId)" href="javascript:;">删除</a></p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -73,7 +78,7 @@
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          <RabbitCheckedBox :modelValue="$store.getters['cart/isSelectedAll']" >全选</RabbitCheckedBox>
+          <RabbitCheckedBox @change="isSelectedAll" :modelValue="$store.getters['cart/isSelectedAll']" >全选</RabbitCheckedBox>
           <a href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;">清空失效商品</a>
@@ -92,12 +97,31 @@
 
 <script>
 import GoodsRelevant from '@/views/goods/components/GoodsRelevant.vue'
+import EmptyCart from './components/EmptyCart.vue'
+import { useStore } from 'vuex'
 export default {
   name: 'Cart',
   components: {
-    GoodsRelevant
-  }
+    GoodsRelevant,
+    EmptyCart
+  },
+  setup () {
+    const store = useStore()
+    // 单选框触发事件
+    const btnChanged = (skuId, selected) => {
+      store.dispatch('cart/updateCart', { skuId, selected })
+    }
+    // 购物车有效商品列表的全选框触发事件
+    const isSelectedAll = (selected) => {
+      store.dispatch('cart/isSelectedAll', selected)
+    }
+    // 删除单个商品
+    const deleteCartGoods = (skuId) => {
+      store.dispatch('cart/deleteCartGoods', skuId)
+    }
 
+    return { btnChanged, isSelectedAll, deleteCartGoods }
+  }
 }
 </script>
 

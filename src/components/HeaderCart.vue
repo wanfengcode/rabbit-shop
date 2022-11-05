@@ -47,7 +47,7 @@ export default {
   name: 'HeaderCart',
   setup () {
     const store = useStore()
-    store.dispatch('cart/updateCart')
+    store.dispatch('cart/getCartList')
 
     const deleteGoods = (skuId) => {
       store.dispatch('cart/deleteCartGoods', skuId)

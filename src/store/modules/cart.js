@@ -78,6 +78,34 @@ export default {
     }
   },
   actions: {
+    // 购物车有效商品列表的全选/非全选
+    isSelectedAll (ctx, selected) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.userMessage.token) {
+          // 用户已登录
+        } else {
+          // 未登录
+          ctx.getters.validList.forEach(goods => {
+            ctx.commit('updateCart', { skuId: goods.skuId, selected })
+          })
+          resolve()
+        }
+      })
+    },
+    // 更新购物车商品信息:selected是否选择、count商品数量选择
+    updateCart (ctx, { skuId, selected }) {
+      // payload:skuId、selected值
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.userMessage.token) {
+          // 用户已登录
+        } else {
+          // 未登录
+          ctx.commit('updateCart', { skuId, selected })
+          resolve()
+        }
+      })
+    },
+    // 设置购物车商品信息
     setCart (ctx, payload) {
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.userMessage.token) {
@@ -89,7 +117,8 @@ export default {
         }
       })
     },
-    updateCart (ctx) {
+    // 获取购物车列表,更新购物车商品的库存和有效性
+    getCartList (ctx) {
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.userMessage.token) {
           // 已登录
@@ -109,6 +138,7 @@ export default {
         }
       })
     },
+    // 删除购物车商品
     deleteCartGoods (ctx, skuId) {
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.userMessage.token) {

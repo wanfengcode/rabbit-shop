@@ -29,7 +29,7 @@ export default {
       // 改变父组件传递数据
       check.value = !check.value
       // 通知父组件数据改变
-      emit('update:modelValue', check.value)
+      emit('change', check.value)
     }
 
     // 通过watch监听props属性中的modelValue字段，将其值赋值给check
