@@ -10,6 +10,26 @@ export default {
     }
   },
   getters: {
+    // 失效商品列表
+    inValidList (state) {
+      return state.list.filter(item => item.stock <= 0 || !item.isEffective)
+    },
+    // 已选择商品列表
+    selectedList (state, getters) {
+      return getters.validList.filter(item => item.selected)
+    },
+    // 已选择商品数量
+    selectedCount (state, getters) {
+      return getters.selectedList.reduce((p, c) => p + c.count, 0)
+    },
+    // 需支付金额
+    selectedAmount (state, getters) {
+      return getters.selectedList.reduce((p, c) => p + Math.round(c.nowPrice * 100) * c.count, 0) / 100
+    },
+    //  是否全选
+    isSelectedAll (state, getters) {
+      return getters.validList.length !== 0 && getters.selectedList.length === getters.validList.length
+    },
     // 有效商品列表
     validList (state) {
       return state.list.filter(item => item.stock > 0 && item.isEffective === true)

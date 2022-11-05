@@ -1,34 +1,41 @@
 <template>
   <div class="cart">
-    <a class="curr" href="#"> <i class="iconfont icon-cart"></i><em>{{$store.getters['cart/validCount']}}</em> </a>
+    <RouterLink class="curr" to="/cart">
+      <i class="iconfont icon-cart"></i
+      ><em>{{ $store.getters["cart/validCount"] }}</em>
+    </RouterLink>
     <div class="layer">
       <div class="list">
-        <div class="item" v-for="item in $store.getters['cart/validList']" :key="item.skuId">
-          <RouterLink to="">
-            <img
-              :src="item.picture"
-              alt=""
-            />
+        <div
+          class="item"
+          v-for="item in $store.getters['cart/validList']"
+          :key="item.skuId"
+        >
+          <RouterLink :to="`/product/${item.id}`">
+            <img :src="item.picture" alt="" />
             <div class="center">
               <p class="name ellipsis-2">
-               {{item.name}}
+                {{ item.name }}
               </p>
-              <p class="attr ellipsis">{{item.attrsText}}</p>
+              <p class="attr ellipsis">{{ item.attrsText }}</p>
             </div>
             <div class="right">
-              <p class="price">&yen;{{item.price}}</p>
-              <p class="count">{{item.count}}</p>
+              <p class="price">&yen;{{ item.price }}</p>
+              <p class="count">{{ item.count }}</p>
             </div>
           </RouterLink>
-          <i @click="deleteGoods(item.skuId)" class="iconfont icon-close-new"></i>
+          <i
+            @click="deleteGoods(item.skuId)"
+            class="iconfont icon-close-new"
+          ></i>
         </div>
       </div>
       <div class="foot">
         <div class="total">
-          <p>共 {{$store.getters['cart/validCount']}} 件商品</p>
-          <p>&yen;{{$store.getters['cart/validAmount']}}</p>
+          <p>共 {{ $store.getters["cart/validCount"] }} 件商品</p>
+          <p>&yen;{{ $store.getters["cart/validAmount"] }}</p>
         </div>
-        <RabbitBtn type="plain">去购物车结算</RabbitBtn>
+        <RabbitBtn type="plain" @click="$router.push('/cart')" >去购物车结算</RabbitBtn>
       </div>
     </div>
   </div>
@@ -36,14 +43,11 @@
 
 <script>
 import { useStore } from 'vuex'
-import Message from './libs/Message'
 export default {
   name: 'HeaderCart',
   setup () {
     const store = useStore()
-    store.dispatch('cart/updateCart').then(() => {
-      Message({ text: '购物车商品信息更新成功' })
-    })
+    store.dispatch('cart/updateCart')
 
     const deleteGoods = (skuId) => {
       store.dispatch('cart/deleteCartGoods', skuId)
