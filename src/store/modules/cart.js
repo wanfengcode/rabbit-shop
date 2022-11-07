@@ -93,14 +93,14 @@ export default {
       })
     },
     // 更新购物车商品信息:selected是否选择、count商品数量选择
-    updateCart (ctx, { skuId, selected }) {
+    updateCart (ctx, payload) {
       // payload:skuId、selected值
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.userMessage.token) {
           // 用户已登录
         } else {
           // 未登录
-          ctx.commit('updateCart', { skuId, selected })
+          ctx.commit('updateCart', payload)
           resolve()
         }
       })
@@ -145,6 +145,20 @@ export default {
           // 已登录
         } else {
           ctx.commit('deleteCartGoods', skuId)
+          resolve()
+        }
+      })
+    },
+    // 批量删除购物车已选商品或失效商品
+    batchDeleteCartGoods (ctx, isEffective) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.userMessage.token) {
+        // 已登录
+        } else {
+        // 未登录
+          ctx.getters[isEffective ? 'inValidList' : 'selectedList'].forEach(goods => {
+            ctx.commit('deleteCartGoods', goods.skuId)
+          })
           resolve()
         }
       })

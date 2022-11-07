@@ -32,6 +32,7 @@
                   <div>
                     <p class="name ellipsis">{{goods.name}}</p>
                     <!-- 选择规格组件 -->
+                    <CartGoodsSku :attrsText='goods.attrsText'></CartGoodsSku>
                   </div>
                 </div>
               </td>
@@ -40,7 +41,7 @@
                 <p v-if="goods.price - goods.nowPrice > 0">比加入时降价 <span class="red">&yen;{{goods.price - goods.nowPrice}}</span></p>
               </td>
               <td class="tc">
-                <RabbitNumberBox :modelValue="goods.count"></RabbitNumberBox>
+                <RabbitNumberBox @numChanged="($event) => goodsCountChanged(goods.skuId,$event)" :max="goods.stock" :modelValue="goods.count"></RabbitNumberBox>
               </td>
               <td class="tc"><p class="f16 red">&yen;{{goods.nowPrice * goods.count}}</p></td>
               <td class="tc">
@@ -79,9 +80,9 @@
       <div class="action">
         <div class="batch">
           <RabbitCheckedBox @change="isSelectedAll" :modelValue="$store.getters['cart/isSelectedAll']" >全选</RabbitCheckedBox>
-          <a href="javascript:;">删除商品</a>
+          <a @click="batchDeleteCartGoods()" href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
-          <a href="javascript:;">清空失效商品</a>
+          <a @click="batchDeleteCartGoods(true)" href="javascript:;">清空失效商品</a>
         </div>
         <div class="total">
           共 {{$store.getters['cart/validCount']}} 件商品，已选择 {{$store.getters['cart/selectedCount']}} 件，商品合计：
@@ -98,6 +99,7 @@
 <script>
 import GoodsRelevant from '@/views/goods/components/GoodsRelevant.vue'
 import EmptyCart from './components/EmptyCart.vue'
+import CartGoodsSku from './components/CartGoodsSku.vue'
 import { useStore } from 'vuex'
 import Confirm from '@/components/libs/Confirm'
 import Message from '@/components/libs/Message'
@@ -105,7 +107,8 @@ export default {
   name: 'Cart',
   components: {
     GoodsRelevant,
-    EmptyCart
+    EmptyCart,
+    CartGoodsSku
   },
   setup () {
     const store = useStore()
@@ -126,8 +129,20 @@ export default {
       }).catch(e => {
       })
     }
+    // 批量删除购物车已选商品或失效商品,传入一个布尔值为真的变量或值时则删除的是失效商品
+    const batchDeleteCartGoods = (invalid) => {
+      Confirm({ text: `确认删除${invalid ? '失效' : '选中'}商品` }).then(() => {
+        store.dispatch('cart/batchDeleteCartGoods', invalid)
+      }).catch(e => {
 
-    return { btnChanged, isSelectedAll, deleteCartGoods }
+      })
+    }
+    // 商品数量变化触发事件
+    const goodsCountChanged = (skuId, count) => {
+      store.dispatch('cart/updateCart', { skuId, count })
+    }
+
+    return { btnChanged, isSelectedAll, deleteCartGoods, batchDeleteCartGoods, goodsCountChanged }
   }
 }
 </script>
