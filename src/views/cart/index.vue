@@ -99,6 +99,8 @@
 import GoodsRelevant from '@/views/goods/components/GoodsRelevant.vue'
 import EmptyCart from './components/EmptyCart.vue'
 import { useStore } from 'vuex'
+import Confirm from '@/components/libs/Confirm'
+import Message from '@/components/libs/Message'
 export default {
   name: 'Cart',
   components: {
@@ -117,7 +119,12 @@ export default {
     }
     // 删除单个商品
     const deleteCartGoods = (skuId) => {
-      store.dispatch('cart/deleteCartGoods', skuId)
+      Confirm({ text: '确认删除该商品吗?' }).then(() => {
+        store.dispatch('cart/deleteCartGoods', skuId).then(() => {
+          Message({ text: '删除成功' })
+        })
+      }).catch(e => {
+      })
     }
 
     return { btnChanged, isSelectedAll, deleteCartGoods }
