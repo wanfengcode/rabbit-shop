@@ -1,4 +1,5 @@
 import { updateCartGoods } from '@/api/cart'
+// import { reject, resolve } from 'core-js/fn/promise'
 
 // 购物车模块
 export default {
@@ -78,6 +79,28 @@ export default {
     }
   },
   actions: {
+
+    // 更新购物车商品sku信息
+    updateCartGoods (ctx, { oldSkuId, newSku }) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.userMessage.token) {
+          // 用户已登录
+        } else {
+          /*
+                  1.找到旧的商品sku信息并删除
+                  2.合并新旧商品的sku信息形成一条新的商品sku
+                  3.插入新形成的商品sku
+                */
+          const oldCartGoods = ctx.state.list.find(item => item.skuId === oldSkuId)
+          ctx.commit('deleteCartGoods', oldSkuId)
+          const { skuId, price: nowPrice, inventory: stock, specsText: attrsText } = newSku
+          const newCartGoods = { ...oldCartGoods, skuId, nowPrice, stock, attrsText }
+          ctx.commit('setCart', newCartGoods)
+          resolve()
+        }
+      })
+    },
+
     // 购物车有效商品列表的全选/非全选
     isSelectedAll (ctx, selected) {
       return new Promise((resolve, reject) => {

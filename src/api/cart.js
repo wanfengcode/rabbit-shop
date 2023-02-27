@@ -5,3 +5,8 @@ import request from '@/utils/request'
 export const updateCartGoods = (skuId) => {
   return request(`/goods/stock/${skuId}`, 'get')
 }
+
+// 获取商品的specs(规格)和skus 参数：skuId
+export const getSpecsAndSkus = (skuId) => {
+  return request(`/goods/sku/${skuId}`, 'get')
+}

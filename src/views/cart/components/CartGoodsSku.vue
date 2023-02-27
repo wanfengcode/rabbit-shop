@@ -1,33 +1,54 @@
 <template>
- <div class="cartGoodsSku">
-    <div class="attrs" ref="target" @click="toggle">
+ <div class="cartGoodsSku" ref="target">
+    <div class="attrs" @click="toggle">
       <span class="ellipsis">{{attrsText}}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="layer" v-show="visible">
-      <div class="loading"></div>
+      <GoodsSku @skuChanged="skuChanged" v-if="goods" :goods="goods" :skuId="skuId"></GoodsSku>
+      <rabbit-btn v-if="goods" type="primary"  size="mini" style="margin-left : 300px" @click="submit" >确认</rabbit-btn>
+      <div v-else class="loading"></div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { getSpecsAndSkus } from '@/api/cart'
+import { ref } from 'vue'
+import GoodsSku from '@/views/goods/components/GoodsSku.vue'
 export default {
   name: 'CartGoodsSku',
+  components: {
+    GoodsSku
+  },
   props: {
     attrsText: {
       type: String,
       default: ''
+    },
+    skuId: {
+      type: String,
+      default: ''
     }
   },
-  setup () {
+  setup (props, { emit }) {
     const visible = ref(false)
     const target = ref(null)
+    const goods = ref(null)
+
+    const getSkus = () => {
+      getSpecsAndSkus(props.skuId).then(data => {
+        goods.value = data.result
+      })
+    }
 
     const open = () => {
       visible.value = true
+      // 向后台发送商品规格数据请求
+      getSkus()
     }
+
     const close = () => {
       visible.value = false
     }
@@ -40,7 +61,22 @@ export default {
       close()
     })
 
-    return { visible, toggle, target }
+    // 记录商品sku的变化
+    const currentSku = ref(null)
+    const skuChanged = (sku) => {
+      currentSku.value = sku
+    }
+
+    // 提交修改后的商品sku
+    const submit = () => {
+      // 变化后的sku存在且不与当前的skuid相同则视作一次有效的改变,向购物车组件提交修改后的sku信息
+      if (currentSku.value && currentSku.value.skuId && currentSku.value.skuId !== props.skuId) {
+        emit('skuChanged', currentSku.value)
+        close()
+      }
+    }
+
+    return { visible, toggle, target, goods, submit, skuChanged }
   }
 }
 </script>

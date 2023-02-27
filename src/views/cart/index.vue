@@ -32,7 +32,7 @@
                   <div>
                     <p class="name ellipsis">{{goods.name}}</p>
                     <!-- 选择规格组件 -->
-                    <CartGoodsSku :attrsText='goods.attrsText'></CartGoodsSku>
+                    <CartGoodsSku @skuChanged="$event=>updateCartGoodsSku(goods.skuId,$event)" :attrsText='goods.attrsText' :skuId='goods.skuId'></CartGoodsSku>
                   </div>
                 </div>
               </td>
@@ -142,7 +142,12 @@ export default {
       store.dispatch('cart/updateCart', { skuId, count })
     }
 
-    return { btnChanged, isSelectedAll, deleteCartGoods, batchDeleteCartGoods, goodsCountChanged }
+    // 更新购物车商品的sku信息
+    const updateCartGoodsSku = (oldSkuId, newSku) => {
+      store.dispatch('cart/updateCartGoods', { oldSkuId, newSku })
+    }
+
+    return { btnChanged, isSelectedAll, deleteCartGoods, batchDeleteCartGoods, goodsCountChanged, updateCartGoodsSku }
   }
 }
 </script>
